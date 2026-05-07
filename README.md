@@ -1,2 +1,5 @@
-# 2126-bio-script
-script for project
+# 2126 script 
+LEAD ryan conti
+hunter hayden
+Natural causes collin
+
