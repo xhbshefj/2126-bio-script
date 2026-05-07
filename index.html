@@ -1,29 +1,70 @@
 <!DOCTYPE html>
 <html>
-<Head>
-<title>
-  2126 script 
-</title>
-  
-  <link rel="icon" type="image/x-icon" href="/images/favicon.png/"> <!-- favicon -->
-  
-</Head>
+<head>
+  <title>2126 script</title>
+  <link rel="icon" type="image/x-icon" href="/images/favicon.png/">
+  <!-- Firebase SDKs -->
+  <script src="https://gstatic.com"></script>
+  <script src="https://gstatic.com"></script>
+</head>
+
+<body style="font-family: sans-serif; padding: 20px;">
   <div>
-  <!-- script code-->
-    <h1 style="color:black; font-size:40px;"> script  </h1>
+    <h1 style="color:black; font-size:40px;"> script </h1>
     <hr>
-      <p style="color:black; font-size:20px;">  chararcers: Collin: side chararcter / director <hr>  Hayden: cameraman / hunter <hr> Ryan: editor / sound / lead role <!-- chararcers--> </p>
-      <hr>
-      
-  <h1 style="color:black; font-size:30px;"> scene 1:</h1>
-   
-  <p style="color:black; font-size:15px;"> scene 1 script<!-- scene 1 goes here -->   </p>
     
-  <hr>
-  <h1 style="color:black; font-size:30px;"> scene 2:</h1>
-  
-  <p style="color:black; font-size:15px;"> scene 2 script <!-- scene 2 goes here --> </p>
+    <!-- contenteditable="true" allows users to click and type directly on the page -->
+    <p id="cast" contenteditable="true" style="color:black; font-size:20px; border: 1px dashed #ccc; padding: 5px;">
+      chararcers: Collin: side chararcter / director <hr> Hayden: cameraman / hunter <hr> Ryan: editor / sound / lead role
+    </p>
+    <hr>
+      
+    <h1 style="color:black; font-size:30px;"> scene 1:</h1>
+    <p id="scene1" contenteditable="true" style="color:black; font-size:15px; border: 1px dashed #ccc; padding: 5px;">
+      scene 1 script
+    </p>
+    
+    <hr>
+    <h1 style="color:black; font-size:30px;"> scene 2:</h1>
+    <p id="scene2" contenteditable="true" style="color:black; font-size:15px; border: 1px dashed #ccc; padding: 5px;">
+      scene 2 script
+    </p>
+
+    <br>
+    <button onclick="saveChanges()" style="padding: 10px 20px; cursor: pointer; background: #007bff; color: white; border: none; border-radius: 5px;">
+      Save Changes Permanently
+    </button>
   </div>
 
-  
+  <script>
+    // 1. YOUR FIREBASE CONFIG GOES HERE
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      databaseURL: "YOUR_DATABASE_URL",
+      projectId: "YOUR_PROJECT_ID"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    // 2. LOAD DATA from the database when the page opens
+    const sections = ['cast', 'scene1', 'scene2'];
+    sections.forEach(id => {
+      db.ref('script/' + id).on('value', (snapshot) => {
+        const data = snapshot.val();
+        if (data) document.getElementById(id).innerHTML = data;
+      });
+    });
+
+    // 3. SAVE DATA to the database when the button is clicked
+    function saveChanges() {
+      sections.forEach(id => {
+        const content = document.getElementById(id).innerHTML;
+        db.ref('script/' + id).set(content);
+      });
+      alert("Script saved successfully for everyone!");
+    }
+  </script>
+</body>
 </html>
